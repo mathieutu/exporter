@@ -40,15 +40,16 @@ $object = new class
         (object) ['baz1' => 'baz1B', 'baz2' => 'baz2B', 'baz3' => 'baz3B'],
         (object) ['baz1' => 'baz1C', 'baz2' => 'baz2C', 'baz3' => 'baz3C'],
     ];
-  
-  	public function testWithParam(string $param): string
+
+    public function testWithParam(string $param): string
     {
-    	return 'test' . $param;
-  	}
-  	public function test(): string
+        return 'test' . $param;
+    }
+
+    public function test(): string
     {
-    	return 'test' . date("l");
-  	}
+        return 'test' . date("l");
+    }
 };
 ```
 
@@ -63,7 +64,7 @@ $object->export(['foo']); // ['foo' => testFoo]
 $object->export(['foo', 'bar']); 
 /* 
 [
-	'foo' => testFoo,
+    'foo' => testFoo,
     'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
 ]
 */
@@ -79,10 +80,10 @@ $object->export(['foo', 'bar']);
 $object->export(['bar' => ['bar2', 'bar3']]);
 /* 
 [
-	'bar' => [
-		'bar2' => testBar2',
-		'bar3' => testBar3',
-	],
+    'bar' => [
+        'bar2' => testBar2',
+        'bar3' => testBar3',
+    ],
 ]
 */
 ```
@@ -105,13 +106,13 @@ $object->export(['bar.bar1']); // ['bar.bar1' => 'testBar1']
 $object->export(['baz' => ['*' => ['baz1', 'baz3']]]); 
 /* 
 [
-	'baz' => [
-		['baz1' => 'baz1A', 'baz3' => 'baz3A'],
-		['baz1' => 'baz1B', 'baz3' => 'baz3B'],
-		['baz1' => 'baz1C', 'baz3' => 'baz3C'],
+    'baz' => [
+        ['baz1' => 'baz1A', 'baz3' => 'baz3A'],
+        ['baz1' => 'baz1B', 'baz3' => 'baz3B'],
+        ['baz1' => 'baz1C', 'baz3' => 'baz3C'],
     ],
 ]
-*/		
+*/        
 ```
 
 
