@@ -13,7 +13,33 @@ Require this package with composer.
 composer require mathieutu/exporter
 ```
 
+## Use cases
 
+Because pictures are worth thousands words..:
+
+The Exporter let you write this:
+
+<p align="center">
+    <a href="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/after.png">
+        <img height=400 src="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/after.png" alt="Exporter use case: After">
+    </a>
+</p>
+
+instead of that:
+
+<p align="center">
+    <a href="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/before.png">
+        <img height=600 src="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/before.png" alt="Exporter use case: Before">
+    </a> 
+</p>
+
+For example, I use it a lot with Laravel Eloquent resources:
+
+<p align="center">
+    <a href="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/resource.png">
+        <img height=500 src="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/resource.png" alt="Exporter use case: Resource">
+    </a>
+</p>
 
 ## Usage
 
