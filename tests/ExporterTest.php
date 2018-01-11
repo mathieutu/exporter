@@ -9,27 +9,15 @@ class ExporterTest extends TestCase
 {
     public function testExport()
     {
-        $exportable = new Model([
-            'foo'    => 'testFoo',
-            'bar'    => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
-            'foobar' => ['foobar1' => 'testFooBar1', 'foobar2' => 'testFooBar2'],
-            'baz'    => [
-                ['baz1' => 'baz1A', 'baz2' => 'baz2A', 'baz3' => 'baz3A'],
-                ['baz1' => 'baz1B', 'baz2' => 'baz2B', 'baz3' => 'baz3B'],
-                ['baz1' => 'baz1C', 'baz2' => 'baz2C', 'baz3' => 'baz3C'],
-            ],
-        ]);
+        $this->assertSame(
+            $this->expectedExport(),
+            $this->exportable()->export($this->attributesToExport())->toArray()
+        );
+    }
 
-        $attributes = [
-            'test(Mathieu)',
-            'test(TUDISCO)',
-            'bar'    => ['bar2'],
-            'bar.bar1',
-            'foobar' => 'foobar2',
-            'baz'    => ['*' => ['baz1', 'baz3']],
-        ];
-
-        $expectedExport = [
+    protected function expectedExport(): array
+    {
+        return [
             'test'     => 'testTUDISCO',
             'bar'      => ['bar2' => 'testBar2'],
             'bar.bar1' => 'testBar1',
@@ -40,7 +28,31 @@ class ExporterTest extends TestCase
                 ['baz1' => 'baz1C', 'baz3' => 'baz3C'],
             ],
         ];
+    }
 
-        $this->assertEquals($expectedExport, $exportable->export($attributes)->toArray());
+    protected function exportable(): Model
+    {
+        return new Model([
+            'foo'    => 'testFoo',
+            'bar'    => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
+            'foobar' => ['foobar1' => 'testFooBar1', 'foobar2' => 'testFooBar2'],
+            'baz'    => [
+                ['baz1' => 'baz1A', 'baz2' => 'baz2A', 'baz3' => 'baz3A'],
+                ['baz1' => 'baz1B', 'baz2' => 'baz2B', 'baz3' => 'baz3B'],
+                ['baz1' => 'baz1C', 'baz2' => 'baz2C', 'baz3' => 'baz3C'],
+            ],
+        ]);
+    }
+
+    protected function attributesToExport(): array
+    {
+        return [
+            'test(Mathieu)',
+            'test(TUDISCO)',
+            'bar'    => ['bar2'],
+            'bar.bar1',
+            'foobar' => 'foobar2',
+            'baz'    => ['*' => ['baz1', 'baz3']],
+        ];
     }
 }
