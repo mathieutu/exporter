@@ -18,6 +18,14 @@ class ExporterServiceTest extends TestCase
         );
     }
 
+    public function testExportFromObjectWithGetter()
+    {
+        $this->assertEquals(
+            collect(['foo' => 'testFoo', 'otherProperty' => 'testOtherProperty']),
+            $this->export(['foo', 'otherProperty'], new Model(['foo' => 'testFoo'], 'testOtherProperty'))
+        );
+    }
+
     public function testExportFromArray()
     {
         $this->assertEquals(

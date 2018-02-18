@@ -18,15 +18,16 @@ class ExporterTest extends TestCase
     protected function expectedExport(): array
     {
         return [
-            'test'     => 'testTUDISCO',
-            'bar'      => ['bar2' => 'testBar2'],
-            'bar.bar1' => 'testBar1',
-            'foobar'   => 'testFooBar2',
-            'baz'      => [
+            'test'          => 'testTUDISCO',
+            'bar'           => ['bar2' => 'testBar2'],
+            'bar.bar1'      => 'testBar1',
+            'foobar'        => 'testFooBar2',
+            'baz'           => [
                 ['baz1' => 'baz1A', 'baz3' => 'baz3A'],
                 ['baz1' => 'baz1B', 'baz3' => 'baz3B'],
                 ['baz1' => 'baz1C', 'baz3' => 'baz3C'],
             ],
+            'otherProperty' => 'an private property with a getter',
         ];
     }
 
@@ -41,7 +42,7 @@ class ExporterTest extends TestCase
                 ['baz1' => 'baz1B', 'baz2' => 'baz2B', 'baz3' => 'baz3B'],
                 ['baz1' => 'baz1C', 'baz2' => 'baz2C', 'baz3' => 'baz3C'],
             ],
-        ]);
+        ], 'an private property with a getter');
     }
 
     protected function attributesToExport(): array
@@ -53,6 +54,7 @@ class ExporterTest extends TestCase
             'bar.bar1',
             'foobar' => 'foobar2',
             'baz'    => ['*' => ['baz1', 'baz3']],
+            'otherProperty'
         ];
     }
 }

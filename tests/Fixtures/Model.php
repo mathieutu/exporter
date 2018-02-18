@@ -10,9 +10,12 @@ class Model
 
     private $attributes;
 
-    public function __construct(array $attributes)
+    private $otherProperty;
+
+    public function __construct(array $attributes, $otherProperty = null)
     {
         $this->attributes = $attributes;
+        $this->otherProperty = $otherProperty;
     }
 
     public function test($value): string
@@ -28,5 +31,10 @@ class Model
     public function __isset($name)
     {
         return isset($this->attributes[$name]);
+    }
+
+    public function getOtherProperty()
+    {
+        return $this->otherProperty;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace MathieuTu\Exporter;
 
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 class ExporterService
@@ -89,6 +90,44 @@ class ExporterService
 
     public function __get($attribute)
     {
-        return data_get($this->exportable, $attribute);
+        return $this->getAttributeValue($attribute);
+    }
+
+    public function getAttributeValue($key, $default = null)
+    {
+        // inspired by Laravel's data_get method.
+        $target = $this->exportable;
+
+        if (is_null($key)) {
+            return $target;
+        }
+
+        $key = is_array($key) ? $key : explode('.', $key);
+
+        while (($segment = array_shift($key)) !== null) {
+            if ($segment === '*') {
+                if ($target instanceof Collection) {
+                    $target = $target->all();
+                } elseif (! is_array($target)) {
+                    return value($default);
+                }
+
+                $result = Arr::pluck($target, $key);
+
+                return in_array('*', $key) ? Arr::collapse($result) : $result;
+            }
+
+            if (Arr::accessible($target) && Arr::exists($target, $segment)) {
+                $target = $target[$segment];
+            } elseif (is_object($target) && isset($target->{$segment})) {
+                $target = $target->{$segment};
+            } elseif (is_object($target) && method_exists($target, $getter = 'get' . ucfirst($segment))) {
+                $target = call_user_func([$target, $getter]);
+            } else {
+                return value($default);
+            }
+        }
+
+        return $target;
     }
 }
