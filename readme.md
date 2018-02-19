@@ -34,7 +34,7 @@ instead of that:
     </a> 
 </p>
 
-For example, I use it a lot with Laravel Eloquent resources:
+For example, I use it a lot with Laravel Eloquent Resources, or as an easier alternative of Symfony Normalizer:
 
 <p align="center">
     <a href="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/resource.png">
@@ -44,11 +44,12 @@ For example, I use it a lot with Laravel Eloquent resources:
 
 ## Usage
 
-Just use the `\MathieuTu\Exporter\Exporter` trait on your objects. Or use directly the `\MathieuTu\Exporter\ExporterService` on array, or if you don't want to add the trait.
+Just use the `\MathieuTu\Exporter\Exporter` trait on your classes. 
+You also can use directly the `\MathieuTu\Exporter\ExporterService::exportFrom($exportable, $attributes)` static method on array, or if you don't want to add the trait.
 
 You can export from arrays, objects with `ArrayAccess` interface, or any standard objects.
 
-The response will be a [Laravel Collection](https://laravel.com/docs/master/collections) (but you absolutely don't need Laravel, **this package is totally framework agnostic**). If you don't know how to use collection, you can use it exactly like an array.
+The response will be a [Laravel Collection](https://laravel.com/docs/master/collections) (but you absolutely don't need Laravel, **this package is totally framework agnostic**). If you don't know how to use collections, you can use it exactly like an array, or use `toArray()` method to get a real one.
 
 ### Examples
 _(You can find all this examples in package tests)_
@@ -61,7 +62,7 @@ $object = new class
     use \MathieuTu\Exporter\Exporter;
 
     public $foo = 'testFoo';
-    public $bar = ['bar1' => 'testBar1', 'bar2' => 'testBar2', 'bar3' => 'testBar3'];
+    private $bar = ['bar1' => 'testBar1', 'bar2' => 'testBar2', 'bar3' => 'testBar3'];
     public $baz = [
         (object) ['baz1' => 'baz1A', 'baz2' => 'baz2A', 'baz3' => 'baz3A'],
         (object) ['baz1' => 'baz1B', 'baz2' => 'baz2B', 'baz3' => 'baz3B'],
@@ -77,6 +78,11 @@ $object = new class
     {
         return 'test' . date("l");
     }
+    
+    public function getBar(): array
+    {
+        return $this->bar;
+    }
 };
 ```
 
@@ -84,7 +90,7 @@ and a standard array as output (in comment), instead of a Collection (result fro
 
 
 
-#### Export root attributes
+#### Export public and private (with getter) root attributes
 
 ```php
 $object->export(['foo']); // ['foo' => testFoo]
@@ -96,7 +102,6 @@ $object->export(['foo', 'bar']);
 ]
 */
 ```
-
 
 
 #### Export from nested array/object
