@@ -6,6 +6,7 @@ use MathieuTu\Exporter\ExporterService;
 use MathieuTu\Exporter\Tests\Fixtures\Collection;
 use MathieuTu\Exporter\Tests\Fixtures\Model;
 use PHPUnit\Framework\TestCase;
+use Tightenco\Collect\Support\Collection as LaravelCollection;
 
 class ExporterServiceTest extends TestCase
 {
@@ -16,6 +17,11 @@ class ExporterServiceTest extends TestCase
             collect(['foo' => 'testFoo', 'bar' => 'testBar']),
             $this->export(['foo', 'bar'], new Model(['foo' => 'testFoo', 'bar' => 'testBar', 'baz' => 'testBaz']))
         );
+    }
+
+    protected function export(array $what, $from): LaravelCollection
+    {
+        return (new ExporterService($from))->export($what);
     }
 
     public function testExportFromObjectWithGetter()
@@ -32,11 +38,6 @@ class ExporterServiceTest extends TestCase
             collect(['foo' => 'testFoo', 'bar' => 'testBar']),
             $this->export(['foo', 'bar'], ['foo' => 'testFoo', 'bar' => 'testBar', 'baz' => 'testBaz'])
         );
-    }
-
-    protected function export(array $what, $from): \Illuminate\Support\Collection
-    {
-        return (new ExporterService($from))->export($what);
     }
 
     public function testExportFromArrayAccess()
@@ -96,7 +97,7 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => [
                     ['bar1' => 'testBar01', 'bar2' => 'testBar02'],
-                    ['bar1' => 'testBar11', 'bar2' => 'testBar12']
+                    ['bar1' => 'testBar11', 'bar2' => 'testBar12'],
                 ],
             ])
         );
@@ -123,6 +124,33 @@ class ExporterServiceTest extends TestCase
                 'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
                 'baz' => 'testBaz',
             ])
+        );
+    }
+
+    public function testExportDotNotationWithNested()
+    {
+        $this->assertEquals(
+            collect([
+                'foo.*'            => null,
+                'bar.*'            => ['testBar1', 'testBar2'],
+                'nested.*.nested1' => ['testNested1A', 'testNested1B'],
+            ]),
+            $this->export(['foo.*', 'bar.*', 'nested.*.nested1'], [
+                'foo'    => 'testFoo',
+                'bar'    => collect(['bar1' => 'testBar1', 'bar2' => 'testBar2']),
+                'nested' => [
+                    ['nested1' => 'testNested1A', 'nested2' => 'testNested2A'],
+                    ['nested1' => 'testNested1B', 'nested2' => 'testNested2B'],
+                ],
+            ])
+        );
+    }
+
+    public function testExportUnknownProperty()
+    {
+        $this->assertEquals(
+            collect(['foo' => 'testFoo', 'bar' => null]),
+            $this->export(['foo', 'bar'], new Model(['foo' => 'testFoo', 'baz' => 'testBaz']))
         );
     }
 }
