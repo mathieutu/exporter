@@ -52,6 +52,21 @@ class ExporterServiceTest extends TestCase
         );
     }
 
+    public function testTryToExportPrivateProperty()
+    {
+        $this->assertEquals(
+            collect(['foo' => 'testFoo', 'bar' => null]),
+            $this->export(
+                ['foo', 'bar'],
+                new class
+                {
+                    public $foo = 'testFoo';
+                    private $bar = 'testBar';
+                }
+            )
+        );
+    }
+
     public function testExportFunction()
     {
         $this->assertEquals(
