@@ -65,6 +65,54 @@ class ExporterService
         })];
     }
 
+    protected function getAttributeValue($attributes)
+    {
+        $attributes = is_array($attributes) ? $attributes : explode('.', $attributes);
+
+        $target = $this->exportable;
+        while (($segment = array_shift($attributes)) !== null) {
+            if ($segment === '*') {
+                return $this->getAttributeValueWithWildcard($target, $attributes);
+            }
+
+            try {
+                $target = $this->getNewTarget($target, $segment);
+            } catch (\Exception $e) {
+                return null;
+            }
+        }
+
+        return $target;
+    }
+
+    protected function getAttributeValueWithWildcard($target, $attribute)
+    {
+        if (!is_iterable($target)) {
+            return null;
+        }
+
+        $result = Arr::pluck($target, $attribute);
+
+        return in_array('*', $attribute) ? Arr::collapse($result) : $result;
+    }
+
+    protected function getNewTarget($target, $segment)
+    {
+        if (Arr::accessible($target) && Arr::exists($target, $segment)) {
+            return $target[$segment];
+        }
+
+        if (is_object($target) && isset($target->{$segment})) {
+            return $target->{$segment};
+        }
+
+        if (is_object($target) && method_exists($target, $getter = 'get' . ucfirst($segment))) {
+            return call_user_func([$target, $getter]);
+        }
+
+        throw new \RuntimeException("$segment can't be found in $target");
+    }
+
     protected function exportNestedAttributes(string $key, array $array): array
     {
         return [$key => self::exportFrom($this->getAttributeValue($key), $array)];
@@ -91,39 +139,5 @@ class ExporterService
         }
 
         return null;
-    }
-
-    protected function getAttributeValue($attribute, $default = null)
-    {
-        // inspired by Laravel's data_get method.
-        $target = $this->exportable;
-
-        $attribute = is_array($attribute) ? $attribute : explode('.', $attribute);
-
-        while (($segment = array_shift($attribute)) !== null) {
-            if ($segment === '*') {
-                if ($target instanceof Collection) {
-                    $target = $target->all();
-                } elseif (!is_array($target)) {
-                    return value($default);
-                }
-
-                $result = Arr::pluck($target, $attribute);
-
-                return in_array('*', $attribute) ? Arr::collapse($result) : $result;
-            }
-
-            if (Arr::accessible($target) && Arr::exists($target, $segment)) {
-                $target = $target[$segment];
-            } elseif (is_object($target) && isset($target->{$segment})) {
-                $target = $target->{$segment};
-            } elseif (is_object($target) && method_exists($target, $getter = 'get' . ucfirst($segment))) {
-                $target = call_user_func([$target, $getter]);
-            } else {
-                return value($default);
-            }
-        }
-
-        return $target;
     }
 }
