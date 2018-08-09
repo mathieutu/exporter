@@ -152,7 +152,7 @@ $object->export(['baz' => ['*' => ['baz1', 'baz3']]]);
 #### Export result of a function
 
 ```php
-$object->export(['testWithParam(Mathieu)']); // ['test' => testMathieu]
+$object->export(['testWithParam(Mathieu)']); // ['testWithParam' => testMathieu]
 $object->export(['test()']); // ['test' => testFriday]
 ```
 
