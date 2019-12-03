@@ -77,7 +77,7 @@ class ExporterService
 
             try {
                 $target = $this->getNewTarget($target, $segment);
-            } catch (\Exception $e) {
+            } catch (NotFoundException $e) {
                 return null;
             }
         }
@@ -110,7 +110,7 @@ class ExporterService
             return call_user_func([$target, $getter]);
         }
 
-        throw new \RuntimeException("$segment can't be found in $target");
+        throw new NotFoundException($segment, $target);
     }
 
     protected function exportNestedAttributes(string $key, array $array): array
