@@ -129,13 +129,17 @@ class ExporterService
             return $export;
         }
 
+        if (preg_match('/^(.*) as (.*)$/', $attribute, $matches)) {
+            return [$matches[2] => $this->getAttributeValue($matches[1])];
+        }
+
         return [$attribute => $this->getAttributeValue($attribute)];
     }
 
     protected function attributeIsAFunction($attribute)
     {
-        if (preg_match("/(.*)\((.*)\)$/", $attribute, $groups)) {
-            return [$groups[1] => call_user_func_array([$this->exportable, $groups[1]], array_map('trim', explode(',', $groups[2])))];
+        if (preg_match("/(.*)\((.*)\)$/", $attribute, $matches)) {
+            return [$matches[1] => call_user_func_array([$this->exportable, $matches[1]], array_map('trim', explode(',', $matches[2])))];
         }
 
         return null;
