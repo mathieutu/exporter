@@ -9,16 +9,16 @@
 
 ## Installation
 
-Require this package with composer.
+Require this package with composer:
 ```bash
 composer require mathieutu/exporter
 ```
 
 ## Use cases
 
-Because pictures are worth thousands words..:
+Because pictures are worth thousands words:
 
-The Exporter let you write this:
+The Exporter package let you write this:
 
 <p align="center">
     <a href="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/after.png">
@@ -44,15 +44,16 @@ For example, I use it a lot with Laravel Eloquent Resources, or as an easier alt
 
 ## Usage
 
-Just use the `\MathieuTu\Exporter\Exporter` trait on your classes. 
-You also can use directly the `\MathieuTu\Exporter\ExporterService::exportFrom($exportable, $attributes)` static method on array, or if you don't want to add the trait.
+Use the `\MathieuTu\Exporter\Exporter` trait on your classes. 
+You also can use directly the `\MathieuTu\Exporter\ExporterService::exportFrom($exportable, $attributes)` static method on array or objects, or if you don't want or can't add the trait.
 
 You can export from arrays, objects with `ArrayAccess` interface, or any standard objects.
 
-The response will be a [Laravel Collection](https://laravel.com/docs/master/collections) (but you absolutely don't need Laravel, **this package is totally framework agnostic**). If you don't know how to use collections, you can use it exactly like an array, or use `toArray()` method to get a real one.
+The response will be a [Laravel Collection](https://laravel.com/docs/master/collections) (but you absolutely don't need Laravel, **this package is totally framework agnostic**). 
+If you don't know how to use collections, you can **use it exactly like an array**, or use `toArray()` method to get a real one.
 
 ### Examples
-_(You can find all this examples in package tests)_
+_(You can find all this examples in [package tests](./tests/ExporterServiceTest.php))_
 
 For the examples, and to cover all the possible ways to use this package, we'll consider this object as input:
 
@@ -149,6 +150,20 @@ $object->export(['baz' => ['*' => ['baz1', 'baz3']]]);
 
 
 
+#### Set an alias as key:
+
+```php
+$object->export(['foo', 'bar.bar2 as secondBar']); 
+/* 
+[
+    'foo' => testFoo,
+    'secondBar' => 'testBar2',
+]
+*/
+```
+
+
+
 #### Export result of a function
 
 ```php
@@ -164,6 +179,6 @@ This Exporter package is an open-sourced software licensed under the [MIT licens
 
 ### Contributing
 
-Issues and PRs are obviously welcomed and encouraged, as well for new features than documentation.
+Issues and PRs are obviously welcomed and encouraged, both for bugs and new features as well as documentation.
 Each piece of code added should be fully tested, but we can do that all together, so please don't be afraid by that. 
 
