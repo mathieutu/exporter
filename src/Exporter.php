@@ -2,7 +2,7 @@
 
 namespace MathieuTu\Exporter;
 
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 trait Exporter
 {
