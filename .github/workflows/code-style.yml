@@ -1,0 +1,21 @@
+name: Code style
+
+on: [push, pull_request]
+
+jobs:
+  phpcs:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: latest
+          tools: phpcs, cs2pr
+          coverage: none
+
+      - name: Run Code style checker
+        run: phpcs -nq --report=checkstyle | cs2pr
