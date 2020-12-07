@@ -2,8 +2,8 @@
 
 namespace MathieuTu\Exporter;
 
-use Tightenco\Collect\Support\Arr;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class ExporterService
 {

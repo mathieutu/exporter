@@ -2,11 +2,11 @@
 
 namespace MathieuTu\Exporter\Tests;
 
+use Illuminate\Support\Collection as LaravelCollection;
 use MathieuTu\Exporter\ExporterService;
 use MathieuTu\Exporter\Tests\Fixtures\Collection;
 use MathieuTu\Exporter\Tests\Fixtures\Model;
 use PHPUnit\Framework\TestCase;
-use Tightenco\Collect\Support\Collection as LaravelCollection;
 
 class ExporterServiceTest extends TestCase
 {
