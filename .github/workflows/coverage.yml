@@ -1,4 +1,4 @@
-name: Coverage
+name: Tests
 
 on:
   push:
@@ -11,14 +11,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: true
-      matrix:
-        php: [8.0, 7.4, 7.3]
-        stability: [prefer-lowest, prefer-stable]
-
-    name: P${{ matrix.php }} - ${{ matrix.stability }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -26,8 +18,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php }}
-          coverage: none
+          php-version: 7.4 # TODO ocular not compatible php8 https://github.com/scrutinizer-ci/ocular/issues/51
+          coverage: xdebug
 
       - name: Setup problem matchers
         run: |
@@ -46,7 +38,12 @@ jobs:
           restore-keys: ${{ runner.os }}-composer-
 
       - name: Install dependencies
-        run: composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+        run: composer update --prefer-dist --no-interaction
 
       - name: Execute tests
-        run: php vendor/bin/phpunit
+        run: php vendor/bin/phpunit --coverage-text --coverage-clover=coverage.clover
+
+      - name: Send coverage to Scrutinizer
+        run: |
+          wget https://scrutinizer-ci.com/ocular.phar
+          php ocular.phar code-coverage:upload --format=php-clover coverage.clover
