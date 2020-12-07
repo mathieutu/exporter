@@ -7,6 +7,10 @@
 The return of export method is not a TightenCo collection, but a standard Laravel Collection.
 See https://github.com/tighten/collect/issues/217#issuecomment-688499481
 
+### Added
+
+- ✨ Add changelog. [[bf0dffa](https://github.com/mathieutu/exporter/commit/bf0dffa197873b98adfaec7d962f71e16dd20a80)]
+
 ### Changed
 
 - ⬆️ Remove php7.2 compatibility (because of illuminate/collections requirement). [[0bbb7a9](https://github.com/mathieutu/exporter/commit/0bbb7a98605a75e5b8b865100bf90f11d8e56a42)]
