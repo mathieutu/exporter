@@ -1,5 +1,20 @@
 # Changelog
 
+
+<a name="3.1.0"></a>
+## 3.1.0 (2020-12-08)
+
+### Added
+
+- ✅ Add test to validate behaviour of nested, wildcard and aliases. (fix [#3](https://github.com/mathieutu/exporter/issues/3)) [[ac796fa](https://github.com/mathieutu/exporter/commit/ac796fafd1dc9369d389946f76a648823988d0c0)]
+- ✨ Add ability to export directly from an iterable with root wildcard. (fix [#1](https://github.com/mathieutu/exporter/issues/1)) [[539235e](https://github.com/mathieutu/exporter/commit/539235e0cbac6df8dde981cc6aefc7fc6caad0dd)]
+- ✨ Add ability to export directly a value if single string or int field at root. (fix [#17](https://github.com/mathieutu/exporter/issues/17)) [[e43550d](https://github.com/mathieutu/exporter/commit/e43550df8776c80d365ecbe220fc9023fbc4a004)]
+
+### Miscellaneous
+
+- 📝 Update outdated readme screenshots. [[2c7d032](https://github.com/mathieutu/exporter/commit/2c7d03244eb81928abfbc3dd6565fd51e4d68b88)]
+
+
 <a name="3.0.0"></a>
 ## 3.0.0 (2020-12-07)
 
