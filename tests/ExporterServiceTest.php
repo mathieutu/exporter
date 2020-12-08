@@ -209,4 +209,18 @@ class ExporterServiceTest extends TestCase
             ['foo' => 'testFoo', 'bar' => 'testBar', 'baz' => 'testBaz'],
         );
     }
+
+    public function testExportDirectlyWildcardFromIterable()
+    {
+        $this->assertEquals(
+            collect([
+                collect(['bar2' => 'testBar02']),
+                collect(['bar2' => 'testBar12']),
+            ]),
+            $this->export(['*' => ['bar2']], [
+                ['bar1' => 'testBar01', 'bar2' => 'testBar02'],
+                ['bar1' => 'testBar11', 'bar2' => 'testBar12'],
+            ])
+        );
+    }
 }

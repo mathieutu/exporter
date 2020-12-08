@@ -7,6 +7,8 @@ use Illuminate\Support\Collection;
 
 class ExporterService
 {
+    protected const WILDCARD = '*';
+
     protected $exportable;
 
     public function __construct($exportable)
@@ -32,22 +34,22 @@ class ExporterService
     {
         $this->validateAttributesTypes($attributes);
 
-        if (!is_array($attributes)) {
+        if (!is_array($attributes) || $this->hasWildcard($attributes)) {
             return $this->exportDirectlyNestedByWrapping($attributes);
         }
 
         return $this->collect($attributes)
             ->mapWithKeys(function ($attribute, $key) {
-            if (is_array($attribute)) {
-                return $this->exportArray($key, $attribute);
-            }
+                if (is_array($attribute)) {
+                    return $this->exportArray($key, $attribute);
+                }
 
-            if (!is_int($key)) {
-                return $this->exportNestedAttribute($key, $attribute);
-            }
+                if (!is_int($key)) {
+                    return $this->exportNestedAttribute($key, $attribute);
+                }
 
-            return $this->exportAttribute($attribute);
-        });
+                return $this->exportAttribute($attribute);
+            });
     }
 
     private function validateAttributesTypes($attributes): void
@@ -57,6 +59,11 @@ class ExporterService
 
             throw new \InvalidArgumentException("Exporter only accept array, string or int attribute. '{$type}' passed.");
         }
+    }
+
+    protected function hasWildcard(array $array): bool
+    {
+        return array_keys($array) === [self::WILDCARD];
     }
 
     private function exportDirectlyNestedByWrapping($attributes)
@@ -80,11 +87,6 @@ class ExporterService
         return $this->exportNestedAttributes($key, $attribute);
     }
 
-    protected function hasWildcard(array $array): bool
-    {
-        return array_keys($array) === ['*'];
-    }
-
     protected function exportWildcard(string $key, array $array): array
     {
         return [$key => $this->collect($this->getAttributeValue($key))->map(function ($exportable) use ($array) {
@@ -98,7 +100,7 @@ class ExporterService
 
         $target = $this->exportable;
         while (($segment = array_shift($attributes)) !== null) {
-            if ($segment === '*') {
+            if ($segment === self::WILDCARD) {
                 return $this->getAttributeValueWithWildcard($target, $attributes);
             }
 
@@ -120,7 +122,7 @@ class ExporterService
 
         $result = Arr::pluck($target, $attribute);
 
-        return in_array('*', $attribute) ? Arr::collapse($result) : $result;
+        return in_array(self::WILDCARD, $attribute) ? Arr::collapse($result) : $result;
     }
 
     protected function getNewTarget($target, $segment)
