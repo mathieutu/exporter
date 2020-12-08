@@ -31,6 +31,14 @@ class ExporterServiceTest extends TestCase
         );
     }
 
+    public function testExportFromObjectWithGetterChangingCase()
+    {
+        $this->assertEquals(
+            collect(['other_property' => 'testOtherProperty']),
+            $this->export(['other_property'], new Model([], 'testOtherProperty'))
+        );
+    }
+
     public function testExportFromArray()
     {
         $this->assertEquals(

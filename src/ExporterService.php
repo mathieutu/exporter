@@ -135,7 +135,10 @@ class ExporterService
             return $target->{$segment};
         }
 
-        if (is_object($target) && method_exists($target, $getter = 'get' . ucfirst($segment))) {
+        $studlySegment = str_replace(' ', '', ucwords(str_replace(['-', '_'], ' ', $segment)));
+        $getter = "get{$studlySegment}";
+
+        if (is_object($target) && method_exists($target, $getter)) {
             return call_user_func([$target, $getter]);
         }
 
