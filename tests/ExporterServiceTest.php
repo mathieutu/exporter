@@ -2,7 +2,6 @@
 
 namespace MathieuTu\Exporter\Tests;
 
-use Illuminate\Support\Collection as LaravelCollection;
 use MathieuTu\Exporter\ExporterService;
 use MathieuTu\Exporter\Tests\Fixtures\Collection;
 use MathieuTu\Exporter\Tests\Fixtures\Model;
@@ -19,7 +18,7 @@ class ExporterServiceTest extends TestCase
         );
     }
 
-    protected function export(array $what, $from): LaravelCollection
+    protected function export($what, $from)
     {
         return (new ExporterService($from))->export($what);
     }
@@ -177,6 +176,37 @@ class ExporterServiceTest extends TestCase
         $this->assertEquals(
             collect(['foo' => 'testFoo', 'bar' => null]),
             $this->export(['foo', 'bar'], new Model(['foo' => 'testFoo', 'baz' => 'testBaz']))
+        );
+    }
+
+    public function testExportOnlyOneAttributeValue()
+    {
+        $this->assertEquals(
+            'testFoo',
+            $this->export('foo', new Model(['foo' => 'testFoo', 'baz' => 'testBaz']))
+        );
+    }
+
+    public function testExportOnlyOneNestedAttributeValue()
+    {
+        $this->assertEquals(
+            'testBar2',
+            $this->export('bar.bar2', [
+                'foo' => 'testFoo',
+                'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
+                'baz' => 'testBaz',
+            ])
+        );
+    }
+
+    public function testPassingUnknownTypeToExportThrowAnException()
+    {
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage("Exporter only accept array, string or int attribute. 'object' passed.");
+
+        $this->export(
+            new \stdClass(),
+            ['foo' => 'testFoo', 'bar' => 'testBar', 'baz' => 'testBaz'],
         );
     }
 }

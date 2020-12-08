@@ -28,7 +28,7 @@ class Model
         return $this->attributes[$name];
     }
 
-    public function __isset($name)
+    public function __isset($name): bool
     {
         return isset($this->attributes[$name]);
     }

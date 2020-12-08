@@ -14,14 +14,30 @@ class ExporterService
         $this->exportable = $exportable;
     }
 
-    public static function exportFrom($exportable, array $attributes): Collection
+    /**
+     * @param mixed $exportable
+     * @param mixed $attributes
+     * @return Collection|mixed
+     */
+    public static function exportFrom($exportable, $attributes)
     {
         return (new self($exportable))->export($attributes);
     }
 
-    public function export(array $attributes): Collection
+    /**
+     * @param array|int|string $attributes
+     * @return Collection|mixed
+     */
+    public function export($attributes)
     {
-        return $this->createCollection($attributes, function ($attribute, $key) {
+        $this->validateAttributesTypes($attributes);
+
+        if (!is_array($attributes)) {
+            return $this->exportDirectlyNestedByWrapping($attributes);
+        }
+
+        return $this->collect($attributes)
+            ->mapWithKeys(function ($attribute, $key) {
             if (is_array($attribute)) {
                 return $this->exportArray($key, $attribute);
             }
@@ -34,9 +50,20 @@ class ExporterService
         });
     }
 
-    protected function createCollection(array $attributes, callable $callback): Collection
+    private function validateAttributesTypes($attributes): void
     {
-        return $this->collect($attributes)->mapWithKeys($callback);
+        if (!is_array($attributes) && !is_string($attributes) && !is_int($attributes)) {
+            $type = gettype($attributes);
+
+            throw new \InvalidArgumentException("Exporter only accept array, string or int attribute. '{$type}' passed.");
+        }
+    }
+
+    private function exportDirectlyNestedByWrapping($attributes)
+    {
+        $key = '***ExporterWrapperKey***';
+
+        return self::exportFrom([$key => $this->exportable], [$key => $attributes])[$key];
     }
 
     protected function collect($items): Collection
@@ -85,7 +112,7 @@ class ExporterService
         return $target;
     }
 
-    protected function getAttributeValueWithWildcard($target, $attribute)
+    protected function getAttributeValueWithWildcard($target, $attribute): ?array
     {
         if (!is_iterable($target)) {
             return null;
@@ -123,7 +150,7 @@ class ExporterService
         return [$key => $this->getAttributeValue("$key.$attribute")];
     }
 
-    protected function exportAttribute(string $attribute)
+    protected function exportAttribute(string $attribute): ?array
     {
         if ($export = $this->attributeIsAFunction($attribute)) {
             return $export;
@@ -136,7 +163,7 @@ class ExporterService
         return [$attribute => $this->getAttributeValue($attribute)];
     }
 
-    protected function attributeIsAFunction($attribute)
+    protected function attributeIsAFunction($attribute): ?array
     {
         if (preg_match("/(.*)\((.*)\)$/", $attribute, $matches)) {
             return [$matches[1] => call_user_func_array([$this->exportable, $matches[1]], array_map('trim', explode(',', $matches[2])))];
