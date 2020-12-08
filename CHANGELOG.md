@@ -1,5 +1,12 @@
 # Changelog
 
+<a name="3.2.0"></a>
+## 3.2.0 (2020-12-08)
+
+### Added
+
+- ✨ Add getter usage with different case than camel. [[9d735c6](https://github.com/mathieutu/exporter/commit/9d735c6c53cabce4af3af5d34d4ecf77cde31be4)]
+
 
 <a name="3.1.0"></a>
 ## 3.1.0 (2020-12-08)
