@@ -21,39 +21,39 @@ Because pictures are worth thousands words:
 The Exporter package let you write this:
 
 <p align="center">
-    <a href="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/after.png">
-        <img height=400 src="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/after.png" alt="Exporter use case: After">
+    <a href="./.github/assets/after.png">
+        <img height="400" src="./.github/assets/after.png" alt="Exporter use case: After">
     </a>
 </p>
 
 instead of that:
 
 <p align="center">
-    <a href="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/before.png">
-        <img height=600 src="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/before.png" alt="Exporter use case: Before">
+    <a href="./.github/assets/before.png">
+        <img height="600" src="./.github/assets/before.png" alt="Exporter use case: Before">
     </a> 
 </p>
 
 For example, I use it a lot with Laravel Eloquent Resources, or as an easier alternative of Symfony Normalizer:
 
 <p align="center">
-    <a href="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/resource.png">
-        <img height=500 src="https://raw.githubusercontent.com/mathieutu/exporter/master/assets/resource.png" alt="Exporter use case: Resource">
+    <a href="./.github/assets/resource.png">
+        <img height=500 src="./.github/assets/resource.png" alt="Exporter use case: Resource">
     </a>
 </p>
 
 ## Usage
 
 Use the `\MathieuTu\Exporter\Exporter` trait on your classes. 
-You also can use directly the `\MathieuTu\Exporter\ExporterService::exportFrom($exportable, $attributes)` static method on array or objects, or if you don't want or can't add the trait.
+You also can use directly the `\MathieuTu\Exporter\ExporterService::exportFrom($exportable, $attributes)` static method on basic arrays or objects, or if you can't add the trait.
 
 You can export from arrays, objects with `ArrayAccess` interface, or any standard objects.
 
-The response will be a [Laravel Collection](https://laravel.com/docs/master/collections) (but you absolutely don't need Laravel, **this package is totally framework agnostic**). 
+The response will be a [Laravel Collection](https://laravel.com/docs/collections) (but you absolutely don't need Laravel, **this package is totally framework agnostic**). 
 If you don't know how to use collections, you can **use it exactly like an array**, or use `toArray()` method to get a real one.
 
 ### Examples
-_(You can find all this examples in [package tests](./tests/ExporterServiceTest.php))_
+_(You can find all this examples and more in the [package tests](./tests/ExporterServiceTest.php))_
 
 For the examples, and to cover all the possible ways to use this package, we'll consider this object as input:
 
@@ -181,4 +181,3 @@ This Exporter package is an open-sourced software licensed under the [MIT licens
 
 Issues and PRs are obviously welcomed and encouraged, both for bugs and new features as well as documentation.
 Each piece of code added should be fully tested, but we can do that all together, so please don't be afraid by that. 
-
