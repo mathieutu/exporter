@@ -127,6 +127,23 @@ class ExporterServiceTest extends TestCase
         );
     }
 
+    public function testExportNestedAttributeWithWildcard()
+    {
+        $this->assertEquals(
+            collect([
+                'nested' => collect(['testNested1A', 'testNested1B']),
+            ]),
+            $this->export(['nested' => ['*' => 'nested1']], [
+                'foo' => 'testFoo',
+                'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
+                'nested' => [
+                    ['nested1' => 'testNested1A', 'nested2' => 'testNested2A'],
+                    ['nested1' => 'testNested1B', 'nested2' => 'testNested2B'],
+                ],
+            ])
+        );
+    }
+
     public function testExportDotNotation()
     {
         $this->assertEquals(
@@ -167,6 +184,25 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
                 'baz' => 'testBaz',
+            ])
+        );
+    }
+
+    public function testExportDotNotationWithNestedAndAliases()
+    {
+        $this->assertEquals(
+            collect([
+                'foos' => null,
+                'bars' => ['testBar1', 'testBar2'],
+                'nestedOnes' => ['testNested1A', 'testNested1B'],
+            ]),
+            $this->export(['foo.* as foos', 'bar.* as bars', 'nested.*.nested1 as nestedOnes'], [
+                'foo' => 'testFoo',
+                'bar' => collect(['bar1' => 'testBar1', 'bar2' => 'testBar2']),
+                'nested' => [
+                    ['nested1' => 'testNested1A', 'nested2' => 'testNested2A'],
+                    ['nested1' => 'testNested1B', 'nested2' => 'testNested2B'],
+                ],
             ])
         );
     }
