@@ -2,3 +2,6 @@
 composer.lock
 .idea
 .phpunit.result.cache
+
+yarn.lock
+node_modules
