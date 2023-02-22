@@ -1,5 +1,24 @@
 # Changelog
 
+<a name="3.3.0"></a>
+## 3.3.0 (2023-02-22)
+
+### Changed
+
+- ⬆️ Upgrade PHPUnit. [[f125b93](https://github.com/mathieutu/exporter/commit/f125b938c6fcc42836017f508b2e9feafba3858e)]
+- ⬆️ Upgrade versions and requirements. [[2b947b7](https://github.com/mathieutu/exporter/commit/2b947b7d3f717b333aabc5986a2552fefc8091f0)]
+
+### Fixed
+
+- 💚 Upgrade Github actions versions. [[312a834](https://github.com/mathieutu/exporter/commit/312a834cb88633d8293527b7b9fabcf262750593)]
+- 💚 Fix coverage upload. [[48b7d47](https://github.com/mathieutu/exporter/commit/48b7d47750a384bb9066f765d2735977721cbd36)]
+
+### Miscellaneous
+
+- 🤖 Upgrade to GitHub-native Dependabot ([#18](https://github.com/mathieutu/exporter/issues/18)) [[a877dde](https://github.com/mathieutu/exporter/commit/a877dde3e51317d2da07e69b750584ea3c9670a9)]
+- 🏷️ Update types and syntax to PHP8. [[b1e5ff9](https://github.com/mathieutu/exporter/commit/b1e5ff9c0c45baf3c88ea837a38fe085fee2a0ff)]
+
+
 <a name="3.2.0"></a>
 ## 3.2.0 (2020-12-08)
 
