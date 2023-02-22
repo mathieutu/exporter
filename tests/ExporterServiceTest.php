@@ -245,8 +245,8 @@ class ExporterServiceTest extends TestCase
 
     public function testPassingUnknownTypeToExportThrowAnException()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage("Exporter only accept array, string or int attribute. 'object' passed.");
+        $this->expectException(\TypeError::class);
+        $this->expectExceptionMessage('Argument #1 ($attributes) must be of type array|string|int');
 
         $this->export(
             new \stdClass(),

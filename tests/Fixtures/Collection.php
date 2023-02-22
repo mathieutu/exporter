@@ -4,11 +4,9 @@ namespace MathieuTu\Exporter\Tests\Fixtures;
 
 class Collection implements \ArrayAccess
 {
-    private $attributes;
-
-    public function __construct(array $attributes)
-    {
-        $this->attributes = $attributes;
+    public function __construct(
+        private array $attributes
+    ) {
     }
 
     public function offsetExists($offset): bool
