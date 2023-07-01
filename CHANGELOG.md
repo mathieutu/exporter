@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="3.3.1"></a>
+## 3.3.1 (2023-07-01)
+
+### Fixed
+
+- 🐛 Fix PHP typing when exporting wildcards from collections (like Laravel relations). [[9f04ef0](https://github.com/mathieutu/exporter/commit/9f04ef0bd74e8f3b6a2a09ff762e34a192a7ae1d)]
+
+
 <a name="3.3.0"></a>
 ## 3.3.0 (2023-02-22)
 
