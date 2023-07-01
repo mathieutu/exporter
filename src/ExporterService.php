@@ -57,7 +57,7 @@ class ExporterService
         return self::exportFrom([$key => $this->exportable], [$key => $attributes])[$key];
     }
 
-    protected function collect(array $items): Collection
+    protected function collect(mixed $items): Collection
     {
         return Collection::make($items);
     }
@@ -80,7 +80,7 @@ class ExporterService
         ];
     }
 
-    protected function getAttributeValue(int|array|string $attributes)
+    protected function getAttributeValue(int|array|string $attributes): mixed
     {
         $attributes = is_array($attributes) ? $attributes : explode('.', $attributes);
 
@@ -112,7 +112,7 @@ class ExporterService
         return in_array(self::WILDCARD, $attribute) ? Arr::collapse($result) : $result;
     }
 
-    protected function getNewTarget(array|object $target, string|int $segment)
+    protected function getNewTarget(array|object $target, string|int $segment): mixed
     {
         if (Arr::accessible($target) && Arr::exists($target, $segment)) {
             return $target[$segment];

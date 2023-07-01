@@ -27,7 +27,7 @@ class ExporterServiceTest extends TestCase
     {
         $this->assertEquals(
             collect(['foo' => 'testFoo', 'otherProperty' => 'testOtherProperty']),
-            $this->export(['foo', 'otherProperty'], new Model(['foo' => 'testFoo'], 'testOtherProperty'))
+            $this->export(['foo', 'otherProperty'], new Model(['foo' => 'testFoo'], 'testOtherProperty')),
         );
     }
 
@@ -35,7 +35,7 @@ class ExporterServiceTest extends TestCase
     {
         $this->assertEquals(
             collect(['other_property' => 'testOtherProperty']),
-            $this->export(['other_property'], new Model([], 'testOtherProperty'))
+            $this->export(['other_property'], new Model([], 'testOtherProperty')),
         );
     }
 
@@ -43,7 +43,7 @@ class ExporterServiceTest extends TestCase
     {
         $this->assertEquals(
             collect(['foo' => 'testFoo', 'bar' => 'testBar']),
-            $this->export(['foo', 'bar'], ['foo' => 'testFoo', 'bar' => 'testBar', 'baz' => 'testBaz'])
+            $this->export(['foo', 'bar'], ['foo' => 'testFoo', 'bar' => 'testBar', 'baz' => 'testBaz']),
         );
     }
 
@@ -55,7 +55,7 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => 'testBar',
                 'baz' => 'testBaz',
-            ]))
+            ])),
         );
     }
 
@@ -68,8 +68,8 @@ class ExporterServiceTest extends TestCase
                 new class {
                     public $foo = 'testFoo';
                     private $bar = 'testBar';
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -89,8 +89,8 @@ class ExporterServiceTest extends TestCase
                     {
                         return $arg;
                     }
-                }
-            )
+                },
+            ),
         );
     }
 
@@ -102,24 +102,27 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
                 'baz' => 'testBaz',
-            ])
+            ]),
         );
     }
 
     public function testExportNestedArrayWithWildcard()
     {
         $this->assertEquals(
-            collect(['foo' => 'testFoo', 'bar' => collect([
-                collect(['bar2' => 'testBar02']),
-                collect(['bar2' => 'testBar12']),
-            ])]),
+            collect([
+                'foo' => 'testFoo',
+                'bar' => collect([
+                    collect(['bar2' => 'testBar02']),
+                    collect(['bar2' => 'testBar12']),
+                ]),
+            ]),
             $this->export(['foo', 'bar' => ['*' => ['bar2']]], [
                 'foo' => 'testFoo',
-                'bar' => [
-                    ['bar1' => 'testBar01', 'bar2' => 'testBar02'],
+                'bar' => collect([
+                    collect(['bar1' => 'testBar01', 'bar2' => 'testBar02']),
                     ['bar1' => 'testBar11', 'bar2' => 'testBar12'],
-                ],
-            ])
+                ]),
+            ]),
         );
     }
 
@@ -131,7 +134,7 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
                 'baz' => 'testBaz',
-            ])
+            ]),
         );
     }
 
@@ -145,10 +148,10 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
                 'nested' => [
-                    ['nested1' => 'testNested1A', 'nested2' => 'testNested2A'],
+                    collect(['nested1' => 'testNested1A', 'nested2' => 'testNested2A']),
                     ['nested1' => 'testNested1B', 'nested2' => 'testNested2B'],
                 ],
-            ])
+            ]),
         );
     }
 
@@ -160,7 +163,7 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
                 'baz' => 'testBaz',
-            ])
+            ]),
         );
     }
 
@@ -179,7 +182,7 @@ class ExporterServiceTest extends TestCase
                     ['nested1' => 'testNested1A', 'nested2' => 'testNested2A'],
                     ['nested1' => 'testNested1B', 'nested2' => 'testNested2B'],
                 ],
-            ])
+            ]),
         );
     }
 
@@ -192,7 +195,7 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
                 'baz' => 'testBaz',
-            ])
+            ]),
         );
     }
 
@@ -211,7 +214,7 @@ class ExporterServiceTest extends TestCase
                     ['nested1' => 'testNested1A', 'nested2' => 'testNested2A'],
                     ['nested1' => 'testNested1B', 'nested2' => 'testNested2B'],
                 ],
-            ])
+            ]),
         );
     }
 
@@ -219,7 +222,7 @@ class ExporterServiceTest extends TestCase
     {
         $this->assertEquals(
             collect(['foo' => 'testFoo', 'bar' => null]),
-            $this->export(['foo', 'bar'], new Model(['foo' => 'testFoo', 'baz' => 'testBaz']))
+            $this->export(['foo', 'bar'], new Model(['foo' => 'testFoo', 'baz' => 'testBaz'])),
         );
     }
 
@@ -227,7 +230,7 @@ class ExporterServiceTest extends TestCase
     {
         $this->assertEquals(
             'testFoo',
-            $this->export('foo', new Model(['foo' => 'testFoo', 'baz' => 'testBaz']))
+            $this->export('foo', new Model(['foo' => 'testFoo', 'baz' => 'testBaz'])),
         );
     }
 
@@ -239,7 +242,7 @@ class ExporterServiceTest extends TestCase
                 'foo' => 'testFoo',
                 'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
                 'baz' => 'testBaz',
-            ])
+            ]),
         );
     }
 
@@ -264,7 +267,7 @@ class ExporterServiceTest extends TestCase
             $this->export(['*' => ['bar2']], [
                 ['bar1' => 'testBar01', 'bar2' => 'testBar02'],
                 ['bar1' => 'testBar11', 'bar2' => 'testBar12'],
-            ])
+            ]),
         );
     }
 }
