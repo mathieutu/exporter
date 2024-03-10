@@ -112,7 +112,7 @@ class ExporterService
         return in_array(self::WILDCARD, $attribute) ? Arr::collapse($result) : $result;
     }
 
-    protected function getNewTarget(array|object $target, string|int $segment): mixed
+    protected function getNewTarget(array|object|null $target, string|int $segment): mixed
     {
         if (Arr::accessible($target) && Arr::exists($target, $segment)) {
             return $target[$segment];

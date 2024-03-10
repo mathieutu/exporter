@@ -226,6 +226,19 @@ class ExporterServiceTest extends TestCase
         );
     }
 
+    public function testExportUnknownOrNullPropertyNested()
+    {
+        $this->assertEquals(
+            collect(['foo' => 'testFoo', 'bar' => collect(['not_existing' => collect(['nested' => null])])]),
+            $this->export(['foo', 'bar' => ['not_existing' => ['nested']]], new Model(['foo' => 'testFoo', 'baz' => 'testBaz'])),
+        );
+
+        $this->assertEquals(
+            collect(['foo' => 'testFoo', 'bar' => collect(['not_existing' => collect(['nested' => null])])]),
+            $this->export(['foo', 'bar' => ['not_existing' => ['nested']]], new Model(['foo' => 'testFoo', 'bar' => null])),
+        );
+    }
+
     public function testExportOnlyOneAttributeValue()
     {
         $this->assertEquals(
