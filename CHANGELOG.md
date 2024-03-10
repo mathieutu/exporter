@@ -1,5 +1,13 @@
 # Changelog
 
+<a name="3.3.2"></a>
+## 3.3.2 (2024-03-10)
+
+### Fixed
+
+- 🐛 Fix types for case where nesting in null target. [[00396ae](https://github.com/mathieutu/exporter/commit/00396ae19de1fdb6183534d53ab1868ec5968e39)]
+
+
 <a name="3.3.1"></a>
 ## 3.3.1 (2023-07-01)
 
