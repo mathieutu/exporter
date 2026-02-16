@@ -129,54 +129,52 @@ class ExporterService
             return call_user_func([$target, $getter]);
         }
 
+        [$method, $args] = $this->parseFunction($segment);
+        if ($method && is_object($target) && method_exists($target, $method)) {
+            return call_user_func_array([$target, $method], $args);
+        }
+
         throw new NotFoundException($segment, $target);
     }
 
     protected function exportNestedAttributes(string $key, array $array): array
     {
-        [$key, $attribute] = $this->parseAlias($key);
+        [$key, $attribute] = $this->parseAttributeName($key);
 
         return [$key => self::exportFrom($this->getAttributeValue($attribute), $array)];
     }
 
     protected function exportNestedAttribute(string $key, int|string $nestedAttribute): array
     {
-        [$key, $attribute] = $this->parseAlias($key);
+        [$key, $attribute] = $this->parseAttributeName($key);
 
         return [$key => $this->getAttributeValue("$attribute.$nestedAttribute")];
     }
 
-    protected function parseAlias(string $key): array
+    protected function parseAttributeName(string $key): array
     {
         if (preg_match('/^(.*) as (.*)$/', $key, $matches)) {
             return [$matches[2], $matches[1]];
         }
 
-        return [$key, $key];
+        [$method] = $this->parseFunction($key);
+
+        return [$method ?? $key, $key];
     }
 
     protected function exportAttribute(string $attribute): ?array
     {
-        if ($export = $this->attributeIsAFunction($attribute)) {
-            return $export;
-        }
-
-        [$key, $attribute] = $this->parseAlias($attribute);
+        [$key, $attribute] = $this->parseAttributeName($attribute);
 
         return [$key => $this->getAttributeValue($attribute)];
     }
 
-    protected function attributeIsAFunction(string $attribute): ?array
+    protected function parseFunction($attribute): array
     {
-        if (preg_match("/(.*)\((.*)\)$/", $attribute, $matches)) {
-            return [
-                $matches[1] => call_user_func_array(
-                    [$this->exportable, $matches[1]],
-                    array_map('trim', explode(',', $matches[2]))
-                )
-            ];
+        if (preg_match('/(.*)\((.*)\)$/', $attribute, $matches)) {
+            return [$matches[1], array_map('trim', explode(',', $matches[2]))];
         }
 
-        return null;
+        return [];
     }
 }

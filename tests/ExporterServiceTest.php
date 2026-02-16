@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 
 class ExporterServiceTest extends TestCase
 {
-
     public function testExportFromObject()
     {
         $this->assertEquals(
@@ -76,10 +75,32 @@ class ExporterServiceTest extends TestCase
     public function testExportFunction()
     {
         $this->assertEquals(
-            collect(['foo' => 'testFoo', 'bar' => 'testBar']),
+            collect([
+                'foo' => 'testFoo', 'bar' => 'testBar',
+                'nested' => 'nested:plop',
+                'nestedCollect' => collect(['fnct' => 'nested:plop']),
+                'nestedDot' => 'nested:plop',
+            ]),
             $this->export(
-                ['foo()', 'bar(testBar)'],
+                [
+                    'foo()', 'bar(testBar)',
+                    'nested' => 'fnct(plop)',
+                    'nested as nestedCollect' => ['fnct(plop)'],
+                    'nested.fnct(plop) as nestedDot'
+                ],
                 new class {
+                    public $nested;
+
+                    public function __construct()
+                    {
+                        $this->nested = new class {
+                            public function fnct($arg)
+                            {
+                                return 'nested:' . $arg;
+                            }
+                        };
+                    }
+
                     public function foo(): string
                     {
                         return 'testFoo';
