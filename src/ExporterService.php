@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace MathieuTu\Exporter;
 
@@ -181,6 +182,6 @@ class ExporterService
             return [$matches[1], array_map('trim', explode(',', $matches[2]))];
         }
 
-        return [];
+        return [null, []];
     }
 }
