@@ -8,12 +8,12 @@ use Illuminate\Support\Collection;
 
 class ExporterService
 {
-    protected const WILDCARD = '*';
+    protected const string WILDCARD = '*';
 
     public static bool $strict = false;
 
     public function __construct(
-        protected mixed $exportable
+        protected readonly mixed $exportable
     ) {
     }
 
@@ -35,16 +35,10 @@ class ExporterService
         }
 
         return $this->collect($attributes)
-            ->mapWithKeys(function ($attribute, $key) {
-                if (is_array($attribute)) {
-                    return $this->exportArray($key, $attribute);
-                }
-
-                if (!is_int($key)) {
-                    return $this->exportNestedAttribute($key, $attribute);
-                }
-
-                return $this->exportAttribute($attribute);
+            ->mapWithKeys(fn($attribute, $key) => match (true) {
+                is_array($attribute) => $this->exportArray($key, $attribute),
+                !is_int($key) => $this->exportNestedAttribute($key, $attribute),
+                default => $this->exportAttribute($attribute),
             });
     }
 
@@ -79,9 +73,8 @@ class ExporterService
         [$key, $attribute] = $this->parseAttributeName($key);
 
         return [
-            $key => $this->collect($this->getAttributeValue($attribute))->map(function ($exportable) use ($array) {
-                return self::exportFrom($exportable, $array['*']);
-            })
+            $key => $this->collect($this->getAttributeValue($attribute))
+                ->map(fn($exportable) => self::exportFrom($exportable, $array['*']))
         ];
     }
 
@@ -135,12 +128,12 @@ class ExporterService
         $getter = "get{$studlySegment}";
 
         if (is_object($target) && method_exists($target, $getter)) {
-            return call_user_func([$target, $getter]);
+            return $target->$getter();
         }
 
         [$method, $args] = $this->parseFunction($segment);
         if ($method && is_object($target) && method_exists($target, $method)) {
-            return call_user_func_array([$target, $method], $args);
+            return $target->$method(...$args);
         }
 
         throw new NotFoundException($segment, $target);
@@ -162,8 +155,8 @@ class ExporterService
 
     protected function parseAttributeName(string $key): array
     {
-        if (preg_match('/^(.*) as (.*)$/', $key, $matches)) {
-            return [$matches[2], $matches[1]];
+        if (preg_match('/^(?<attr>.*) as (?<alias>.*)$/', $key, $matches)) {
+            return [$matches['alias'], $matches['attr']];
         }
 
         [$method] = $this->parseFunction($key);
@@ -178,10 +171,10 @@ class ExporterService
         return [$key => $this->getAttributeValue($attribute)];
     }
 
-    protected function parseFunction($attribute): array
+    protected function parseFunction(string $attribute): array
     {
-        if (preg_match('/(.*)\((.*)\)$/', $attribute, $matches)) {
-            return [$matches[1], array_map('trim', explode(',', $matches[2]))];
+        if (preg_match('/^(?<method>.*)\((?<args>.*)\)$/', $attribute, $matches)) {
+            return [$matches['method'], array_map(trim(...), explode(',', $matches['args']))];
         }
 
         return [null, []];
