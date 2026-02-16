@@ -9,6 +9,8 @@ class ExporterService
 {
     protected const WILDCARD = '*';
 
+    public static bool $strict = false;
+
     public function __construct(
         protected mixed $exportable
     ) {
@@ -94,6 +96,10 @@ class ExporterService
             try {
                 $target = $this->getNewTarget($target, $segment);
             } catch (NotFoundException $e) {
+                if (self::$strict) {
+                    throw $e;
+                }
+
                 return null;
             }
         }

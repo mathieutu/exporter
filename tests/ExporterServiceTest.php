@@ -2,7 +2,9 @@
 
 namespace MathieuTu\Exporter\Tests;
 
+use Illuminate\Support\Collection as SupportCollection;
 use MathieuTu\Exporter\ExporterService;
+use MathieuTu\Exporter\NotFoundException;
 use MathieuTu\Exporter\Tests\Fixtures\Collection;
 use MathieuTu\Exporter\Tests\Fixtures\Model;
 use PHPUnit\Framework\TestCase;
@@ -245,7 +247,21 @@ class ExporterServiceTest extends TestCase
         );
     }
 
-    public function testExportUnknownProperty()
+    public function testExportingUnknowPropertyThrowsIfStrictnessEnabled()
+    {
+        ExporterService::$strict = true;
+        try {
+            $this->export(['foo', 'bar'], new SupportCollection(['foo' => 'testFoo', 'baz' => 'testBaz']));
+            $this->fail('An NotFoundException should have been thrown when trying to export an unknown property with strictness enabled');
+        } catch (NotFoundException $e) {
+            $this->addToAssertionCount(1);
+            $this->assertEquals('bar can\'t be found in {"foo":"testFoo","baz":"testBaz"}', $e->getMessage());
+        } finally {
+            ExporterService::$strict = false;
+        }
+    }
+
+    public function testExportingUnknownPropertyReturnsNullIfStrictnessDisabled()
     {
         $this->assertEquals(
             collect(['foo' => 'testFoo', 'bar' => null]),
