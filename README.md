@@ -1,6 +1,5 @@
 # Exporter: Export the attributes you need from all your objects and arrays.
 
-<a href="https://travis-ci.org/mathieutu/exporter"><img src="https://img.shields.io/travis/mathieutu/exporter/master.svg?style=flat-square" alt="Build Status"></img></a> 
 <a href="https://scrutinizer-ci.com/g/mathieutu/exporter"><img src="https://img.shields.io/scrutinizer/g/mathieutu/exporter.svg?style=flat-square" alt="Quality Score"></img></a>
 <a href="https://scrutinizer-ci.com/g/mathieutu/exporter"><img src="https://img.shields.io/scrutinizer/coverage/g/mathieutu/exporter.svg?style=flat-square" alt="Code Coverage"></img></a>
 <a href="https://packagist.org/packages/mathieutu/exporter"><img src="https://poser.pugx.org/mathieutu/exporter/d/total.svg?format=flat-square" alt="Total Downloads"></a>

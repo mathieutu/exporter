@@ -84,7 +84,7 @@ class ExporterTest extends TestCase
                     (object)['id' => 2, 'author' => 'Bob', 'content' => 'Very helpful', 'likes' => 3],
                     (object)['id' => 3, 'author' => 'Charlie', 'content' => 'Thanks for sharing', 'likes' => 7],
                 ];
-            }
+                }
 
                 public function getSlug(): string
                 {
