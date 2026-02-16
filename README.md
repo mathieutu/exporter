@@ -49,8 +49,21 @@ You also can use directly the `\MathieuTu\Exporter\ExporterService::exportFrom($
 
 You can export from arrays, objects with `ArrayAccess` interface, or any standard objects.
 
-The response will be a [Laravel Collection](https://laravel.com/docs/collections) (but you absolutely don't need Laravel, **this package is totally framework agnostic**). 
+The response will be a [Laravel Collection](https://laravel.com/docs/collections) (but you absolutely don't need Laravel, **this package is totally framework-agnostic**). 
 If you don't know how to use collections, you can **use it exactly like an array**, or use `toArray()` method to get a real one.
+
+### Strict Mode
+
+By default, when you try to export an attribute that doesn't exist, the Exporter will return `null` for that attribute. However, you can enable **strict mode** to throw a `NotFoundException` instead, which helps catch typos and missing attributes during development:
+
+```php
+\MathieuTu\Exporter\ExporterService::$strict = true;
+
+$object->export(['foo', 'nonExistentProperty']); 
+// Throws: NotFoundException: nonExistentProperty can't be found in {...}
+```
+
+This is particularly useful during development to ensure all your exported attributes exist, and can be disabled in production if you prefer more lenient behavior.
 
 ### Examples
 _(You can find all this examples and more in the [package tests](./tests/ExporterServiceTest.php))_
@@ -58,8 +71,7 @@ _(You can find all this examples and more in the [package tests](./tests/Exporte
 For the examples, and to cover all the possible ways to use this package, we'll consider this object as input:
 
 ```php
-$object = new class
-{
+$object = new class {
     use \MathieuTu\Exporter\Exporter;
 
     public $foo = 'testFoo';
@@ -171,6 +183,86 @@ $object->export(['testWithParam(Mathieu)']); // ['testWithParam' => testMathieu]
 $object->export(['test()']); // ['test' => testFriday]
 ```
 
+
+## Complete Example
+
+Here's a comprehensive example that showcases the full power of the Exporter package by combining functions, aliases, nesting, and wildcards:
+
+```php
+// Consider a real-world scenario: a blog post with author and comments
+$blogPost = new class {
+    use \MathieuTu\Exporter\Exporter;
+
+    public int $id = 42;
+    public string $title = 'Exporting Complex Data Structures with PHP Exporter';
+    public DateTime $publishedAt {
+        get => new DateTime('2026-02-15');
+    }
+
+    public array $author = [
+        'id' => 1,
+        'name' => 'Mathieu Tudisco',
+        'email' => 'oss@mathieutu.dev',
+        'bio' => 'PHP Developer',
+    ];
+
+    public array $comments {
+        get => [
+            (object)['id' => 1, 'author' => 'Alice', 'content' => 'Great article!', 'likes' => 5],
+            (object)['id' => 2, 'author' => 'Bob', 'content' => 'Very helpful', 'likes' => 3],
+            (object)['id' => 3, 'author' => 'Charlie', 'content' => 'Thanks for sharing', 'likes' => 7],
+        ];
+    }
+
+        public function getSlug(): string
+        {
+            return strtolower(str_replace(' ', '-', $this->title));
+        }
+
+        public function getExcerpt(): string
+        {
+            return substr($this->title, 0, 17) . '...';
+        }
+};
+
+// Export a complete, structured API response with all features combined
+$apiResponse = $blogPost->export([
+    'id',
+    'title',
+    'slug',                                       // Automatic getter (getSlug)
+    'publishedAt' => 'format(j F Y)',           // Native nested function with parameter
+    'excerpt as summary',                         // Automatic getter + alias
+    'author as writer' => ['name', 'bio'],        // Nested export with alias on key
+    'author' => 'name',                           // Nested export
+    'author.email as contact',                    // Nested export with dot notation + alias
+    'comments as feedback' => [                   // Collection with alias on key
+        '*' => ['author as commenter', 'likes']   // Wildcard + alias on nested attribute
+    ],
+]);
+
+/* Result:
+[
+    'id' => 42,
+    'title' => 'Exporting Complex Data Structures with PHP Exporter',
+    'slug' => 'exporting-complex-data-structures-with-php-exporter',
+    'publishedAt' => '15 February 2026',
+    'summary' => 'Exporting Complex...',
+    'writer' => [
+        'name' => 'Mathieu Tudisco',
+        'bio' => 'PHP Developer',
+    ],
+    'author' => 'Mathieu Tudisco',
+    'contact' => 'oss@mathieutu.dev',
+    'feedback' => [
+        ['commenter' => 'Alice', 'likes' => 5],
+        ['commenter' => 'Bob', 'likes' => 3],
+        ['commenter' => 'Charlie', 'likes' => 7],
+    ],
+]
+*/
+```
+
+All these features work seamlessly together, allowing you to transform complex data structures into clean, well-structured responses with minimal code.
 
 
 ### License
