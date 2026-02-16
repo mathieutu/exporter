@@ -1,5 +1,20 @@
 # Changelog
 
+<a name="3.4.0"></a>
+## 3.4.0 (2026-02-16)
+
+### Added
+
+- ✨ Add a strict mode to throw errors. [[a01e54a](https://github.com/mathieutu/exporter/commit/a01e54a1cd1b503a59e5c5dbe3561be60c3345b1)]
+- ✨ Allows function call in any cases. [[e41b87b](https://github.com/mathieutu/exporter/commit/e41b87bec16591e9ad9ea81fe1a41ad363b2b283)]
+- ✨ Improve aliasing and allows it in keys. [[3fc368a](https://github.com/mathieutu/exporter/commit/3fc368ace2c3520d5b42de705d8c51de0a9eb111)]
+
+### Changed
+
+- ⬆️ Remove support for php &lt; 8.4. [[b02dd72](https://github.com/mathieutu/exporter/commit/b02dd72dee3a49046ed0aaa253fb8c7eaea53478)]
+- ⬆️ Upgrade deps. [[45c80a4](https://github.com/mathieutu/exporter/commit/45c80a4a91bba7e1789c17ffddea6392fc453114)]
+
+
 <a name="3.3.2"></a>
 ## 3.3.2 (2024-03-10)
 
