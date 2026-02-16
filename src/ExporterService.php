@@ -76,8 +76,10 @@ class ExporterService
 
     protected function exportWildcard(string $key, array $array): array
     {
+        [$key, $attribute] = $this->parseAttributeName($key);
+
         return [
-            $key => $this->collect($this->getAttributeValue($key))->map(function ($exportable) use ($array) {
+            $key => $this->collect($this->getAttributeValue($attribute))->map(function ($exportable) use ($array) {
                 return self::exportFrom($exportable, $array['*']);
             })
         ];
