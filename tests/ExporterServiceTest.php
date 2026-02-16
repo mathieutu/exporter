@@ -190,10 +190,16 @@ class ExporterServiceTest extends TestCase
     public function testExportAliases()
     {
         $this->assertEquals(
-            collect(['foo' => 'testFoo', 'barKey' => 'testBar2', 'bazKey' => 'testBaz']),
-            $this->export(['foo', 'bar.bar2 as barKey', 'baz as bazKey'], [
+            collect([
+                'foo' => 'testFoo', 'barKey' => 'testBar2', 'bazKey' => 'testBaz',
+                'nestedBar' => collect(['a' => 'testA', 'cbis' => 'testC']), 'barB' => 'testB'
+            ]),
+            $this->export([
+                'foo', 'bar.bar2 as barKey', 'baz as bazKey',
+                'bar.bar3 as nestedBar' => ['a', 'c as cbis'], 'bar as barB' => 'bar3.b'
+            ], [
                 'foo' => 'testFoo',
-                'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2'],
+                'bar' => ['bar1' => 'testBar1', 'bar2' => 'testBar2', 'bar3' => ['a' => 'testA', 'b' => 'testB', 'c' => 'testC']],
                 'baz' => 'testBaz',
             ]),
         );

@@ -134,12 +134,25 @@ class ExporterService
 
     protected function exportNestedAttributes(string $key, array $array): array
     {
-        return [$key => self::exportFrom($this->getAttributeValue($key), $array)];
+        [$key, $attribute] = $this->parseAlias($key);
+
+        return [$key => self::exportFrom($this->getAttributeValue($attribute), $array)];
     }
 
-    protected function exportNestedAttribute(string $key, int|string $attribute): array
+    protected function exportNestedAttribute(string $key, int|string $nestedAttribute): array
     {
-        return [$key => $this->getAttributeValue("$key.$attribute")];
+        [$key, $attribute] = $this->parseAlias($key);
+
+        return [$key => $this->getAttributeValue("$attribute.$nestedAttribute")];
+    }
+
+    protected function parseAlias(string $key): array
+    {
+        if (preg_match('/^(.*) as (.*)$/', $key, $matches)) {
+            return [$matches[2], $matches[1]];
+        }
+
+        return [$key, $key];
     }
 
     protected function exportAttribute(string $attribute): ?array
@@ -148,11 +161,9 @@ class ExporterService
             return $export;
         }
 
-        if (preg_match('/^(.*) as (.*)$/', $attribute, $matches)) {
-            return [$matches[2] => $this->getAttributeValue($matches[1])];
-        }
+        [$key, $attribute] = $this->parseAlias($attribute);
 
-        return [$attribute => $this->getAttributeValue($attribute)];
+        return [$key => $this->getAttributeValue($attribute)];
     }
 
     protected function attributeIsAFunction(string $attribute): ?array
